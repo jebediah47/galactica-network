@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 import hashlib
 import json
+import random
 
 
 class Transaction:
@@ -14,6 +15,8 @@ class Transaction:
 
 
 class Block:
+    nonce = random.random() * 999999999
+
     def __init__(self, previous_hash, transaction: Transaction):
         self.previous_hash = previous_hash
         self.transaction = transaction.to_json()
@@ -25,7 +28,7 @@ class Block:
 
 
 class Chain:
-    # create a singleton instance of the Chain class
+    # Singleton instance of the Chain class
     instance = None
 
     def __new__(cls, *args, **kwargs):
@@ -36,11 +39,27 @@ class Chain:
     chain = [Block]
 
     def __init__(self):
-        self.chain = [Block("", Transaction(10, "Genesis", "Satoshi"))]
+        self.chain = [Block(None, Transaction(10, "Genesis", "Satoshi"))]
 
     def get_last_block(self):
         return self.chain[-1]
 
+    @staticmethod
+    def mine(nonce: int):
+        solution = 1
+        print("⛏️ Mining...")
+
+        while True:
+            md5_input = hashlib.md5(f"{nonce + solution}".encode())
+            attempt = md5_input.hexdigest()
+
+            if attempt[:6] == "000000":
+                print(f"🎉 Success! {attempt}")
+                return solution
+
+            solution += 1
+
     def add_block(self, transaction: Transaction):
         new_block = Block(self.get_last_block().get_hash(), transaction)
+        self.mine(new_block.nonce)
         self.chain.append(new_block)

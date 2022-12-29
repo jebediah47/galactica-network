@@ -16,8 +16,9 @@ def generate_address(public_key: bytes) -> str:
 
 
 class Wallet:
-    public_key: str
-    private_key: str
+    public_key = None
+    private_key = None
+    wallet_address = None
 
     def __init__(self):
         keypair = rsa.generate_private_key(
@@ -30,7 +31,8 @@ class Wallet:
             encoding=serialization.Encoding.PEM,
             format=serialization.PublicFormat.SubjectPublicKeyInfo
         )
-        self.public_key = generate_address(public_key_bytes)
+        self.public_key = public_key_bytes.decode("utf-8")
+        self.wallet_address = generate_address(public_key_bytes)
 
         # Encode the private key as PKCS#8 and PEM
         private_key_bytes = keypair.private_bytes(
@@ -41,5 +43,5 @@ class Wallet:
         self.private_key = private_key_bytes.decode("utf-8")
 
     def create_transaction(self, amount, recipient):
-        transaction = Transaction(amount, self.public_key, recipient)
+        transaction = Transaction(amount, self.wallet_address, recipient)
         Chain.instance.add_block(transaction=transaction)
