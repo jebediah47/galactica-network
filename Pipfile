@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 cryptography = "==38.0.4"
+pycryptodome = "*"
+numba = "*"
 
 [dev-packages]
 

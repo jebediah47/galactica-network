@@ -1,6 +1,18 @@
 from blockchain import Transaction, Chain
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
+from Crypto.Hash import keccak
+
+
+def generate_address(public_key: bytes) -> str:
+    # Hash the public key using the Keccak-256 hash function
+    keccak_hash = keccak.new(digest_bits=256)
+    keccak_hash.update(public_key)
+    hash_bytes = keccak_hash.digest()
+
+    # Take the last 20 bytes of the hash and convert them to an address
+    address = '0x' + hash_bytes[-20:].hex()
+    return address
 
 
 class Wallet:
@@ -18,7 +30,7 @@ class Wallet:
             encoding=serialization.Encoding.PEM,
             format=serialization.PublicFormat.SubjectPublicKeyInfo
         )
-        self.public_key = public_key_bytes.decode("utf-8")
+        self.public_key = generate_address(public_key_bytes)
 
         # Encode the private key as PKCS#8 and PEM
         private_key_bytes = keypair.private_bytes(
