@@ -1,7 +1,8 @@
 from blockchain import Transaction, Chain
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import rsa, padding
+from cryptography.hazmat.primitives import serialization, hashes
 from Crypto.Hash import keccak
+import hashlib
 
 
 def generate_address(public_key: bytes) -> str:
@@ -43,5 +44,16 @@ class Wallet:
         self.private_key = private_key_bytes.decode("utf-8")
 
     def create_transaction(self, amount, recipient):
+        private_key = serialization.load_pem_private_key(
+            self.private_key.encode("utf-8"),
+            password=None
+        )
         transaction = Transaction(amount, self.wallet_address, recipient)
-        Chain.instance.add_block(transaction=transaction)
+        sig = private_key.sign(
+            hashlib.sha256(transaction.to_json().encode("ascii")).hexdigest().encode(),
+            padding.PSS(
+                mgf=padding.MGF1(hashes.SHA256()),
+                salt_length=padding.PSS.MAX_LENGTH),
+            hashes.SHA256()
+        )
+        Chain.instance.add_block(transaction=transaction, sender_public_key=self.public_key, signature=sig)
