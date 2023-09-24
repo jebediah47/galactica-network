@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 cryptography = "==41.0.4"
-pycryptodome = "==3.16.0"
+pycryptodome = "==3.19.0"
 
 [dev-packages]
 
