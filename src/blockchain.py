@@ -20,7 +20,7 @@ class Transaction:
 
 
 class Block:
-    nonce = random.random() * 999999999
+    nonce = random.randint(0, 4294967295)
 
     def __init__(self, previous_hash, transaction: Transaction):
         self.previous_hash = previous_hash
@@ -50,7 +50,7 @@ class Chain:
         return self.chain[-1]
 
     @staticmethod
-    def mine(nonce: int):
+    def mine(nonce):
         solution = 1
         print("⛏️ Mining...")
 
