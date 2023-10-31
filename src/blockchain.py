@@ -20,6 +20,7 @@ class Transaction:
 
 
 class Block:
+    # 32-bit signed int
     nonce = random.randint(0, 4294967295)
 
     def __init__(self, previous_hash, transaction: Transaction):
