@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "galactica_network"
+name = "galactica-network"
 version = "0.1.0"
 description = ""
 authors = ["Christian Llupo <jebediah47@protonmail.com>"]
