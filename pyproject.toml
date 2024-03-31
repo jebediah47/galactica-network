@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "galactica_network"
+version = "0.1.0"
+description = ""
+authors = ["Christian Llupo <jebediah47@protonmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+cryptography = "^42.0.5"
+pycryptodome = "^3.20.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
